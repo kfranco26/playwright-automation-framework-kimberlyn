@@ -5,7 +5,7 @@ Playwright + TypeScript automation framework using POM, data-driven testing, and
 
 Demonstrate the ability to automate web interactions using **Playwright + TypeScript** based on the DemoQA application:
 
-👉 https://demoqa.com/automation-practice-form
+👉 https://demoqa.com/
 
 ---
 
@@ -45,3 +45,116 @@ This framework is built using:
 ---
 
 ## 📁 Project Structure
+- `pages/` → Page Object Models  
+- `tests/` → Test Specs  
+- `data/` → Test Data & Builders  
+- `utils/` → Helper Functions  
+- `fixtures/` → Custom Playwright Fixtures  
+
+---
+
+## 🛠 Tech Stack
+
+- Playwright
+- TypeScript
+- Node.js
+- Faker (for test data generation)
+
+---
+
+## ▶️ Run Tests
+
+Run all tests:
+
+```bash
+npx playwright test
+```
+
+Run in headed mode:
+
+```bash
+npx playwright test --headed
+```
+
+Run a specific test:
+
+```bash
+npx playwright test tests/forms/studentForm.spec.ts
+```
+
+---
+
+## 📊 Reporting
+
+View Playwright HTML report:
+
+```bash
+npx playwright show-report
+```
+
+---
+
+## 🔥 Allure Reporting (Optional)
+
+Install dependencies:
+
+```bash
+npm install -D allure-playwright allure-commandline
+```
+
+Update `playwright.config.ts`:
+
+```ts
+reporter: [['html'], ['allure-playwright']]
+```
+
+Generate and open report:
+
+```bash
+npx playwright test
+npx allure generate allure-results --clean -o allure-report
+npx allure open allure-report
+```
+
+----
+
+## ✅ Best Practices Applied
+
+- Stable locators (`getByRole`, avoiding dynamic CSS)
+- Strict mode compatibility
+- Clean separation of concerns (POM)
+- Reusable and scalable test design
+- Minimal, intent-focused comments
+- Data-driven test coverage
+
+---
+
+## 📋 Evaluation Criteria Coverage
+
+✔ Correct automation of required features  
+✔ Playwright best practices applied  
+✔ Clean, readable, maintainable code  
+✔ Comments explaining intent where needed  
+
+---
+
+## 📦 Submission
+
+Project can be run using:
+
+```bash
+npx playwright test
+```
+
+---
+## 👤 Author
+
+**Kimberlyn Franco**  
+QA Automation Engineer
+
+----
+
+👤 Author
+
+Kimberlyn Franco
+QA Automation Engineer
