@@ -35,12 +35,27 @@ The following functionalities are automated:
 
 ## 🧠 Approach
 
-This framework is built using:
-
-- **Page Object Model (POM)** — separates UI interactions from test logic  
-- **Data-Driven Testing** — scenarios defined independently from tests  
-- **Builder Pattern** — dynamic and reusable test data generation  
-- **Custom Fixtures** — reusable page setup for cleaner tests  
+# 🧠 Approach
+# This automation framework is built using modern Playwright + TypeScript best practices:
+#
+# - Page Object Model (POM)
+#   Separates locators and reusable UI actions from test assertions
+#
+# - Hybrid Data-Driven Testing
+#   Combines fixture-based test data with Faker-generated dynamic values
+#
+# - Utility-Based Randomization
+#   Uses helper functions for randomized DOB, hobbies, subjects, and state/city selection
+#
+# - Reusable Utilities & Helpers
+#   Reduces duplicate code and keeps tests maintainable
+#
+# - Assertions Inside Spec Files Only
+#   Follows proper separation of concerns and cleaner test structure
+#
+# - Playwright Best Practices
+#   Uses stable locators like getByRole() and getByText(),
+#   avoids hard waits, and supports screenshots/videos for debugging
 
 ---
 
