@@ -1,13 +1,17 @@
-import { expect, Locator, Page } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { BasePage } from '../BasePage';
 import { WebTableUser } from '../../data/webTablesTestData';
 
-// Web Tables page object
+// Page Object for Web Tables page
 export class WebTablesPage extends BasePage {
+  // Action buttons
   readonly addButton: Locator;
   readonly submitButton: Locator;
+
+  // Search input for filtering table rows
   readonly searchInput: Locator;
 
+  // Form fields for user creation/edit
   readonly firstNameInput: Locator;
   readonly lastNameInput: Locator;
   readonly emailInput: Locator;
@@ -15,12 +19,14 @@ export class WebTablesPage extends BasePage {
   readonly salaryInput: Locator;
   readonly departmentInput: Locator;
 
+  // Table and empty state
   readonly table: Locator;
   readonly noDataMessage: Locator;
 
   constructor(page: Page) {
     super(page);
 
+    // Initialize locators using accessible selectors (best practice)
     this.addButton = page.getByRole('button', { name: 'Add' });
     this.submitButton = page.getByRole('button', { name: 'Submit' });
     this.searchInput = page.getByPlaceholder('Type to search');
@@ -36,78 +42,57 @@ export class WebTablesPage extends BasePage {
     this.noDataMessage = page.getByText('No rows found');
   }
 
+  // Navigate to Web Tables page
   async goto(): Promise<void> {
     await this.navigateTo('/webtables');
   }
 
+  // Add a new user via modal form
   async addUser(user: WebTableUser): Promise<void> {
     await this.addButton.click();
     await this.fillForm(user);
     await this.submitButton.click();
-
-    await this.expectUserVisible(user);
   }
 
+  // Filter table using search input
   async search(value: string): Promise<void> {
     await this.searchInput.fill(value);
-    await expect(this.searchInput).toHaveValue(value);
   }
 
+  // Edit an existing user identified by email
   async editUser(email: string, updatedUser: WebTableUser): Promise<void> {
     await this.search(email);
 
-    const row = this.getRowByEmail(email);
-    await expect(row).toBeVisible();
-
-    await row.locator('[title="Edit"]').click();
+    // Locate row dynamically based on email
+    await this.getRowByEmail(email).locator('[title="Edit"]').click();
 
     await this.fillForm(updatedUser);
     await this.submitButton.click();
-
-    await this.expectUserVisible(updatedUser);
   }
 
+  // Delete user by email
   async deleteUser(email: string): Promise<void> {
     await this.search(email);
 
-    const row = this.getRowByEmail(email);
-    await expect(row).toBeVisible();
-
-    await row.locator('[title="Delete"]').click();
+    // Click delete action inside matching row
+    await this.getRowByEmail(email).locator('[title="Delete"]').click();
   }
 
-  async expectUserVisible(user: WebTableUser): Promise<void> {
-    await this.search(user.email);
-
-    const row = this.getRowByEmail(user.email);
-
-    await expect(row).toBeVisible({ timeout: 10000 });
-    await expect(row).toContainText(user.firstName);
-    await expect(row).toContainText(user.lastName);
-    await expect(row).toContainText(user.email);
-    await expect(row).toContainText(user.age);
-    await expect(row).toContainText(user.salary);
-    await expect(row).toContainText(user.department);
-  }
-
-  async expectNoRowsFound(): Promise<void> {
-    const dataRows = this.table
-      .getByRole('row')
-      .filter({ hasNotText: 'First Name' });
-
-    await expect(dataRows).toHaveCount(0);
-  }
-
-  private getRowByEmail(email: string): Locator {
+  // Reusable locator for row lookup using dynamic text match
+  getRowByEmail(email: string): Locator {
     return this.table.getByRole('row', {
       name: new RegExp(this.escapeRegExp(email), 'i'),
     });
   }
 
-  private escapeRegExp(value: string): string {
-    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // Returns all data rows (excluding header row)
+  getDataRows(): Locator {
+    return this.table
+      .getByRole('row')
+      .filter({ hasNotText: 'First Name' });
   }
 
+  // Fill modal form fields
   private async fillForm(user: WebTableUser): Promise<void> {
     await this.firstNameInput.fill(user.firstName);
     await this.lastNameInput.fill(user.lastName);
@@ -115,5 +100,10 @@ export class WebTablesPage extends BasePage {
     await this.ageInput.fill(user.age);
     await this.salaryInput.fill(user.salary);
     await this.departmentInput.fill(user.department);
+  }
+
+  // Escape special characters for RegExp safety
+  private escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 }
