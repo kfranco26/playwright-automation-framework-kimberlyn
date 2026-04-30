@@ -35,7 +35,12 @@ test.describe('Select Menu', () => {
       }
 
       // Validate selected values in native multi-select dropdown
-      await expect(selectMenuPage.carsDropdown).toHaveValues(scenario.cars);
+      const selectedCars = await selectMenuPage.carsDropdown.evaluate(
+      (element: HTMLSelectElement) =>
+        Array.from(element.selectedOptions).map(option => option.value)
+      );
+
+      expect(selectedCars.sort()).toEqual([...scenario.cars].sort());
     });
   }
 });
